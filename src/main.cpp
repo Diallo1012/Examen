@@ -173,3 +173,10 @@ void setup()
     Serial.println("WiFi connected..!");
     Serial.print("Got IP: ");
     Serial.println(WiFi.localIP());
+
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send_P(200, "text/html", Home_html); });
+
+ server.on("/js/stock.js", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "application/javascript", Js_Objet); });
