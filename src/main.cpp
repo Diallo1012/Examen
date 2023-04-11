@@ -130,3 +130,35 @@ const char Home_html[] PROGMEM = R"rawliteral(
         crossorigin="anonymous"></script>
 </body>
 </html>)rawliteral";
+
+const char Js_Objet[] PROGMEM = R"rawliteral(
+    setInterval(function () {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var recup = JSON.parse(this.responseText);
+                document.getElementById("tempVal").innerHTML = recup.temperature;
+                document.getElementById("humidVal").innerHTML = recup.humidite;
+                document.getElementById("pressVal").innerHTML = recup.pressure;
+                document.getElementById("altVal").innerHTML = recup.altitude;
+            }
+        };
+        xhttp.open("GET", "/data", true);
+        xhttp.send();
+    },3000);
+)rawliteral";
+
+void setup()
+{
+    Serial.begin(9600);
+    while (!Serial)
+        // delay(1000);  wait for native usb
+        Serial.println(F("BME280 test"));
+    // status = BME.begin(BME280_ADDRESS_ALT, BME280_CHIPID);
+    bme.begin(0x76);
+
+    Serial.println("Connecting to ");
+    Serial.println(ssid);
+
+    // connect to your local wi-fi network
+    WiFi.begin(ssid, password);
