@@ -180,3 +180,28 @@ void setup()
 
  server.on("/js/stock.js", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(200, "application/javascript", Js_Objet); });
+
+  // Créez une route pour envoyer les données du capteur au format JSON
+    server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request)
+              {
+    String objet = "{";
+    objet += "\"temperature\": " + String(bme.readTemperature()) + ",";
+    objet += "\"humidite\": " + String(bme.readHumidity()) + ",";
+    objet += "\"pressure\": " + String(bme.readPressure() / 100.0F) + ",";
+    objet += "\"altitude\": " + String(bme.readAltitude(1013.25));
+    objet += "}";
+
+    
+    request->send(200, "application/json", objet); });
+
+    Serial.println("Serveur web disponible");
+    AsyncElegantOTA.begin(&server); // Start ElegantOTA
+    Serial.println("HTTP server started");
+
+    server.begin();
+}
+
+void loop()
+{
+}
+
